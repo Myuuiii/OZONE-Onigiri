@@ -9,6 +9,7 @@ namespace OZONEOnigiri.Handlers
 	{
 		public static async Task HandleMessageAsync(DiscordClient client, MessageCreateEventArgs eventArgs)
 		{
+			if (eventArgs.Author.IsBot) return;
 			var cnext = client.GetCommandsNext();
 			var message = eventArgs.Message;
 

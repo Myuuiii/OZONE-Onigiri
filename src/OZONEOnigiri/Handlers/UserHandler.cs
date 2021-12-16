@@ -33,25 +33,26 @@ namespace OZONEOnigiri.Handlers
 					if (user.Experience >= (user.Level * 100))
 					{
 						user.Level++;
-
-						if (Onigiri._db.Roles.Any(r => r.Level == user.Level))
-						{
-							OnigiriRole[] roles = Onigiri._db.Roles.Where(r => r.Level == user.Level).ToArray();
-							foreach (OnigiriRole role in roles)
-							{
-								if (args.Guild.Roles.Any(r => r.Key == role.Id))
-								{
-									await (args.Author as DiscordMember).GrantRoleAsync(args.Guild.GetRole(role.Id));
-								}
-								else
-								{
-									// Role does not exist
-								}
-							}
-						}
-						await args.Message.RespondAsync("Level up! You have reached level {user.Level}!`");
+						user.Experience = 0;
+						await args.Message.RespondAsync($"Level up! You have reached level {user.Level}!`");
 					}
 
+					if (Onigiri._db.Roles.Any(r => r.Level <= user.Level))
+					{
+						OnigiriRole[] roles = Onigiri._db.Roles.Where(r => r.Level <= user.Level).ToArray();
+						foreach (OnigiriRole role in roles)
+						{
+							if (args.Guild.Roles.Any(r => r.Key == role.Id))
+							{
+								if ((args.Author as DiscordMember).Roles.Any(r => r.Id == role.Id))
+									continue;
+
+								await (args.Author as DiscordMember).GrantRoleAsync(args.Guild.GetRole(role.Id));
+							}
+						}
+					}
+
+					await Onigiri._db.SaveChangesAsync();
 				}
 				else
 				{

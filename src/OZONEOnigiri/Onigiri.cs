@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using OZONEOnigiri.Configuration;
 using OZONEOnigiri.Data;
 using OZONEOnigiri.Handlers;
+using OZONEOnigiri.Modules;
 
 namespace OZONEOnigiri
 {
@@ -36,6 +37,8 @@ namespace OZONEOnigiri
 				UseDefaultCommandHandler = false,
 				StringPrefixes = new[] { _config.Prefix }
 			});
+
+			_commands.RegisterCommands<RoleManagement>();
 
 			_client.MessageCreated += CommandHandler.HandleMessageAsync;
 
