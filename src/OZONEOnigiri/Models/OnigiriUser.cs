@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using DSharpPlus.Entities;
 
 namespace OZONEOnigiri.Models
 {
@@ -16,6 +17,13 @@ namespace OZONEOnigiri.Models
 		public string GetMention()
 		{
 			return $"<@{Id}>";
+		}
+
+		public void UpdateInformation(DiscordUser user)
+		{
+			this.Username = user.Username;
+			this.Discriminator = user.Discriminator;
+			this.Avatar = user.GetAvatarUrl(DSharpPlus.ImageFormat.Auto, 2048);
 		}
 	}
 }

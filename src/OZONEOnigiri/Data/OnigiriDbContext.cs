@@ -10,6 +10,7 @@ namespace OZONEOnigiri.Data
 
 		// Collections
 		public DbSet<OnigiriUser> Users { get; set; }
+		public DbSet<OnigiriRole> Roles { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{

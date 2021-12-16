@@ -10,6 +10,10 @@ namespace OZONEOnigiri.Configuration
 		public string Token { get; set; }
 		public string Prefix { get; set; }
 
+		/// <summary>
+		/// Loads the configuration if it exists, if it doesn't then the program will exit after creating a blank configuration
+		/// </summary>
+		/// <returns></returns>
 		public static OnigiriConfig LoadIfExists()
 		{
 			if (!File.Exists(OnigiriConfig.SavePath))

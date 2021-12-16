@@ -3,6 +3,7 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using Newtonsoft.Json;
 using OZONEOnigiri.Configuration;
+using OZONEOnigiri.Data;
 using OZONEOnigiri.Handlers;
 
 namespace OZONEOnigiri
@@ -12,8 +13,11 @@ namespace OZONEOnigiri
 		private static DiscordClient _client;
 		private static CommandsNextExtension _commands;
 		public static OnigiriConfig _config;
+		public static OnigiriDbContext _db;
 		public static void Main(string[] args)
 		{
+			_config = OnigiriConfig.LoadIfExists();
+			_db = new OnigiriDbContext();
 
 			MainAsync().GetAwaiter().GetResult();
 		}
@@ -22,14 +26,15 @@ namespace OZONEOnigiri
 		{
 			_client = new DiscordClient(new DiscordConfiguration()
 			{
-				Token = "",
+				Token = _config.Token,
 				TokenType = TokenType.Bot,
 				Intents = DiscordIntents.All
 			});
 
 			_commands = _client.UseCommandsNext(new CommandsNextConfiguration()
 			{
-				UseDefaultCommandHandler = false
+				UseDefaultCommandHandler = false,
+				StringPrefixes = new[] { _config.Prefix }
 			});
 
 			_client.MessageCreated += CommandHandler.HandleMessageAsync;
