@@ -35,10 +35,11 @@ namespace OZONEOnigiri
 			_commands = _client.UseCommandsNext(new CommandsNextConfiguration()
 			{
 				UseDefaultCommandHandler = false,
-				StringPrefixes = new[] { _config.Prefix }
+				StringPrefixes = new[] { _config.Prefix, "onigiri!" }
 			});
 
 			_commands.RegisterCommands<RoleManagement>();
+			_commands.RegisterCommands<Information>();
 
 			_client.MessageCreated += CommandHandler.HandleMessageAsync;
 

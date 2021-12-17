@@ -11,6 +11,8 @@ namespace OZONEOnigiri.Modules
 	public class RoleManagement : BaseCommandModule
 	{
 		[Command("addrole")]
+		[Aliases(new[] { "ar", "add" })]
+		[Description("Add a role to the system")]
 		[RequirePermissions(Permissions.ManageRoles)]
 		public async Task AddRole(CommandContext ctx, int level, [RemainingText] DiscordRole role)
 		{
@@ -30,6 +32,8 @@ namespace OZONEOnigiri.Modules
 		}
 
 		[Command("removerole")]
+		[Aliases(new[] { "rr", "remove" })]
+		[Description("Removes a a role from the system")]
 		[RequirePermissions(Permissions.ManageRoles)]
 		public async Task RemoveRole(CommandContext ctx, [RemainingText] DiscordRole role)
 		{
@@ -50,6 +54,8 @@ namespace OZONEOnigiri.Modules
 		}
 
 		[Command("listroles")]
+		[Aliases(new[] { "lr", "list" })]
+		[Description("Lists all roles in the system")]
 		public async Task ListRoles(CommandContext ctx)
 		{
 			await ctx.TriggerTypingAsync();
