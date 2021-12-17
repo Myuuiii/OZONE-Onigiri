@@ -15,10 +15,9 @@ namespace OZONEOnigiri.Handlers
 
 			var cmdStart = message.GetStringPrefixLength(Onigiri._config.Prefix);
 
+			_ = Task.Run(async () => await UserHandler.HandleUser(eventArgs));
 			if (cmdStart == -1)
 			{
-				// Regular message
-				_ = Task.Run(async () => await UserHandler.HandleUser(eventArgs));
 				return;
 			}
 

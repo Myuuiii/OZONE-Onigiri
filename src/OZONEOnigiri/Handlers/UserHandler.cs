@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
+using OZONEOnigiri.Data;
 using OZONEOnigiri.Models;
 
 namespace OZONEOnigiri.Handlers
@@ -18,10 +19,11 @@ namespace OZONEOnigiri.Handlers
 		{
 			try
 			{
-				if (Onigiri._db.Users.Any(u => u.Id == args.Author.Id))
+				OnigiriDbContext db = new OnigiriDbContext();
+				if (db.Users.Any(u => u.Id == args.Author.Id))
 				{
 					// User was found
-					OnigiriUser user = Onigiri._db.Users.Single(u => u.Id == args.Author.Id);
+					OnigiriUser user = db.Users.Single(u => u.Id == args.Author.Id);
 					user.MessagesSent++;
 					user.UpdateInformation(args.Author);
 
@@ -34,12 +36,12 @@ namespace OZONEOnigiri.Handlers
 					{
 						user.Level++;
 						user.Experience = 0;
-						await args.Message.RespondAsync($"Level up! You have reached level {user.Level}!`");
+						await args.Message.RespondAsync($"Level up! You have reached level {user.Level}!");
 					}
 
-					if (Onigiri._db.Roles.Any(r => r.Level <= user.Level))
+					if (db.Roles.Any(r => r.Level <= user.Level))
 					{
-						OnigiriRole[] roles = Onigiri._db.Roles.Where(r => r.Level <= user.Level).ToArray();
+						OnigiriRole[] roles = db.Roles.Where(r => r.Level <= user.Level).ToArray();
 						foreach (OnigiriRole role in roles)
 						{
 							if (args.Guild.Roles.Any(r => r.Key == role.Id))
@@ -52,7 +54,7 @@ namespace OZONEOnigiri.Handlers
 						}
 					}
 
-					await Onigiri._db.SaveChangesAsync();
+					await db.SaveChangesAsync();
 				}
 				else
 				{
@@ -60,8 +62,8 @@ namespace OZONEOnigiri.Handlers
 					user.Id = args.Author.Id;
 					user.UpdateInformation(args.Author);
 
-					Onigiri._db.Users.Add(user);
-					await Onigiri._db.SaveChangesAsync();
+					db.Users.Add(user);
+					await db.SaveChangesAsync();
 				}
 			}
 			catch

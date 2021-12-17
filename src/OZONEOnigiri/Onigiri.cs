@@ -40,6 +40,7 @@ namespace OZONEOnigiri
 
 			_commands.RegisterCommands<RoleManagement>();
 			_commands.RegisterCommands<Information>();
+			_commands.RegisterCommands<Vanity>();
 
 			_client.MessageCreated += CommandHandler.HandleMessageAsync;
 

@@ -4,6 +4,7 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using OZONEOnigiri.Data;
 using OZONEOnigiri.Models;
 
 namespace OZONEOnigiri.Modules
@@ -16,8 +17,9 @@ namespace OZONEOnigiri.Modules
 		[RequirePermissions(Permissions.ManageRoles)]
 		public async Task AddRole(CommandContext ctx, int level, [RemainingText] DiscordRole role)
 		{
+			OnigiriDbContext db = new OnigiriDbContext();
 			await ctx.TriggerTypingAsync();
-			if (!Onigiri._db.Roles.Any(r => r.Id == role.Id))
+			if (!db.Roles.Any(r => r.Id == role.Id))
 			{
 				DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder();
 				embedBuilder.WithTitle("New role registered!");
@@ -25,8 +27,8 @@ namespace OZONEOnigiri.Modules
 				embedBuilder.WithColor(new DiscordColor("#BED79D"));
 				embedBuilder.WithFooter("OZONE Onigiri");
 
-				Onigiri._db.Roles.Add(new OnigiriRole(role.Id, level));
-				await Onigiri._db.SaveChangesAsync();
+				db.Roles.Add(new OnigiriRole(role.Id, level));
+				await db.SaveChangesAsync();
 				await ctx.RespondAsync(embed: embedBuilder.Build());
 			}
 		}
@@ -37,18 +39,19 @@ namespace OZONEOnigiri.Modules
 		[RequirePermissions(Permissions.ManageRoles)]
 		public async Task RemoveRole(CommandContext ctx, [RemainingText] DiscordRole role)
 		{
+			OnigiriDbContext db = new OnigiriDbContext();
 			await ctx.TriggerTypingAsync();
-			if (Onigiri._db.Roles.Any(r => r.Id == role.Id))
+			if (db.Roles.Any(r => r.Id == role.Id))
 			{
 				DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder();
 				embedBuilder.WithTitle("Role removed!");
-				embedBuilder.WithDescription($"**Role**: {role.Name}\n**Level**: {Onigiri._db.Roles.Single(r => r.Id == role.Id).Level}");
+				embedBuilder.WithDescription($"**Role**: {role.Name}\n**Level**: {db.Roles.Single(r => r.Id == role.Id).Level}");
 				embedBuilder.WithColor(new DiscordColor("#BED79D"));
 				embedBuilder.WithFooter("OZONE Onigiri");
 
-				OnigiriRole onigiriRole = Onigiri._db.Roles.Single(r => r.Id == role.Id);
-				Onigiri._db.Roles.Remove(onigiriRole);
-				await Onigiri._db.SaveChangesAsync();
+				OnigiriRole onigiriRole = db.Roles.Single(r => r.Id == role.Id);
+				db.Roles.Remove(onigiriRole);
+				await db.SaveChangesAsync();
 				await ctx.RespondAsync(embed: embedBuilder.Build());
 			}
 		}
@@ -58,15 +61,16 @@ namespace OZONEOnigiri.Modules
 		[Description("Lists all roles in the system")]
 		public async Task ListRoles(CommandContext ctx)
 		{
+			OnigiriDbContext db = new OnigiriDbContext();
 			await ctx.TriggerTypingAsync();
-			if (Onigiri._db.Roles.Any())
+			if (db.Roles.Any())
 			{
 				DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder();
 				embedBuilder.WithTitle("Roles");
 				embedBuilder.WithColor(new DiscordColor("#BED79D"));
 				embedBuilder.WithFooter("OZONE Onigiri");
 				string roles = "";
-				foreach (OnigiriRole role in Onigiri._db.Roles.OrderBy(r => r.Level))
+				foreach (OnigiriRole role in db.Roles.OrderBy(r => r.Level))
 				{
 					roles += $"**Level {role.Level}**: {ctx.Guild.GetRole(role.Id).Mention}\n";
 				}
